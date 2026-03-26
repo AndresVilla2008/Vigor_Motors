@@ -34,16 +34,26 @@ public class AuthController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/refreshToken")
     public ResponseEntity<RefreshTokenResponseDTO> refreshToken(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
+
+        String token = authHeader.substring(7);
+
+        RefreshTokenResponseDTO response = new RefreshTokenResponseDTO();
         try {
-            return ResponseEntity.ok(authService.refreshToken(authHeader.substring(7)));
+            response = authService.refreshToken(token);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            response.setMessage("Token expired");
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
 }

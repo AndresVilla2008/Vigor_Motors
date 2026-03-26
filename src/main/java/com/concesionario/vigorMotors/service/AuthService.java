@@ -58,6 +58,7 @@ public class AuthService {
     public RefreshTokenResponseDTO refreshToken(String token) {
         String jwt = jwtService.refreshToken(token);
         RefreshTokenResponseDTO response = new RefreshTokenResponseDTO();
+        response.setMessage("ok");
         response.setJwt(jwt);
         return response;
     }
