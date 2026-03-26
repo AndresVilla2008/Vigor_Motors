@@ -19,4 +19,4 @@ server:
 security:
   jwt:
     secret-key: u8AhznLPjTvgk9m6WRhvMx2fPQJjjg9rUCw+u0n08zA7FoxuVGEQIaNR0ULxIksTWuqUBKKW4+m3bzkwlI0eDA==
-    token-expiration: 86400000
+    token-expiration: 600000
