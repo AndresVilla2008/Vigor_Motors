@@ -30,7 +30,9 @@ public class AuthController {
         try {
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(authService.login(request));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            LoginResponseDTO error = new LoginResponseDTO();
+            error.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         }
     }
 
@@ -55,5 +57,17 @@ public class AuthController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<MessageResponseDTO> logout(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            MessageResponseDTO error = new MessageResponseDTO();
+            error.setMessage("Token no proporcionado");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        }
+        String token = authHeader.substring(7);
+        return ResponseEntity.ok(authService.logout(token));
     }
 }

@@ -15,6 +15,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final UsersRepository usersRepository;
     private final JwtService jwtService;
+    private final TokenBlacklistService tokenBlacklistService;
 
     public MessageResponseDTO register(RegisterRequestDTO request) {
         if (usersRepository.findByEmail(request.getEmail()).isPresent()) {
@@ -60,6 +61,13 @@ public class AuthService {
         RefreshTokenResponseDTO response = new RefreshTokenResponseDTO();
         response.setMessage("ok");
         response.setJwt(jwt);
+        return response;
+    }
+
+    public MessageResponseDTO logout(String token) {
+        tokenBlacklistService.addToken(token);
+        MessageResponseDTO response = new MessageResponseDTO();
+        response.setMessage("Sesión cerrada correctamente");
         return response;
     }
 }
