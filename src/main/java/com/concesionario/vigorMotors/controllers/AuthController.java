@@ -1,5 +1,6 @@
 package com.concesionario.vigorMotors.controllers;
 
+import com.concesionario.vigorMotors.service.TokenBlacklistService;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import com.concesionario.vigorMotors.dto.*;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
+    private final TokenBlacklistService tokenBlacklistService;
     private final AuthService authService;
 
     @PostMapping("/register")
@@ -44,6 +46,12 @@ public class AuthController {
         }
 
         String token = authHeader.substring(7);
+
+        if (tokenBlacklistService.isBlacklisted(token)) {
+            RefreshTokenResponseDTO error = new RefreshTokenResponseDTO();
+            error.setMessage("La sesión fue cerrada, inicia sesión nuevamente");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+        }
 
         RefreshTokenResponseDTO response = new RefreshTokenResponseDTO();
         try {
