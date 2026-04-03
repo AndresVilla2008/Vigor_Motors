@@ -157,4 +157,71 @@ public class OrderController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/purchaseHistory")
+    public ResponseEntity<?> getPurchaseHistory(HttpServletRequest httpRequest) {
+
+        String authHeader = httpRequest.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            MessageResponseDTO error = new MessageResponseDTO();
+            error.setMessage("Token no proporcionado");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        }
+
+        String token = authHeader.substring(7);
+
+        if (tokenBlacklistService.isBlacklisted(token)) {
+            MessageResponseDTO error = new MessageResponseDTO();
+            error.setMessage("Sesión cerrada, inicie sesión nuevamente");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+        }
+
+        String role = jwtService.extractRole(token);
+            if (!role.equals("CLIENT")) {
+            MessageResponseDTO error = new MessageResponseDTO();
+            error.setMessage("No tienes permisos para realizar esta acción");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+        }
+
+        try {
+            return ResponseEntity.ok(orderItemService.getPurchaseHistory(token));
+        } catch (RuntimeException e) {
+            MessageResponseDTO error = new MessageResponseDTO();
+            error.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        }
+    }
+
+    @GetMapping("/admin/purchaseHistory")
+    public ResponseEntity<?> getAllPurchaseHistory(HttpServletRequest httpRequest) {
+
+        String authHeader = httpRequest.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            MessageResponseDTO error = new MessageResponseDTO();
+            error.setMessage("Token no proporcionado");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        }
+
+        String token = authHeader.substring(7);
+
+        if (tokenBlacklistService.isBlacklisted(token)) {
+            MessageResponseDTO error = new MessageResponseDTO();
+            error.setMessage("Sesión cerrada, inicie sesión nuevamente");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+        }
+
+        String role = jwtService.extractRole(token);
+        if (!role.equals("ADMIN")) {
+            MessageResponseDTO error = new MessageResponseDTO();
+            error.setMessage("No tienes permisos para realizar esta acción");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+        }
+
+        try {
+            return ResponseEntity.ok(orderItemService.getAllPurchaseHistory());
+        } catch (RuntimeException e) {
+            MessageResponseDTO error = new MessageResponseDTO();
+            error.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        }
+    }
 }
