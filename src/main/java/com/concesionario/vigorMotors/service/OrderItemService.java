@@ -50,31 +50,45 @@ public class OrderItemService {
     }
 
     public List<SelectedItemResponseDTO> getSelectedItems(String token) {
-    Long userId = jwtService.extractUserId(token);
-    List<OrderItem> items = orderItemRepository.findByUserIdAndOrderIdIsNull(userId);
+        Long userId = jwtService.extractUserId(token);
+        List<OrderItem> items = orderItemRepository.findByUserIdAndOrderIdIsNull(userId);
 
-     if (items.isEmpty()) {
-        throw new RuntimeException("No tienes productos seleccionados");
+        if (items.isEmpty()) {
+            throw new RuntimeException("No tienes productos seleccionados");
+        }
+
+        return items.stream().map(item -> {
+            Vehicle vehicle = vehicleRepository.findById(item.getVehicle()).orElseThrow(() -> new RuntimeException("Vehículo no encontrado: " + item.getVehicle()));
+
+            SelectedItemResponseDTO response = new SelectedItemResponseDTO();
+            response.setItemId(item.getId());
+            response.setQuantity(item.getQuantity());
+            response.setPrice(item.getPrice());
+            response.setVehicleId(vehicle.getId());
+            response.setBrand(vehicle.getBrand());
+            response.setModel(vehicle.getModel());
+            response.setYear(vehicle.getYear());
+            response.setColor(vehicle.getColor());
+            response.setFuelType(vehicle.getFuelType().name());
+            response.setTransmission(vehicle.getTransmission().name());
+            response.setImageUrl(vehicle.getImageUrl());
+
+            return response;
+        }).collect(Collectors.toList());
     }
 
-    return items.stream().map(item -> {
-        Vehicle vehicle = vehicleRepository.findById(item.getVehicle())
-                .orElseThrow(() -> new RuntimeException("Vehículo no encontrado: " + item.getVehicle()));
+    public void deleteItem(Long itemId, Long userId) {
+    OrderItem item = orderItemRepository.findById(itemId)
+            .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
-        SelectedItemResponseDTO response = new SelectedItemResponseDTO();
-        response.setItemId(item.getId());
-        response.setQuantity(item.getQuantity());
-        response.setPrice(item.getPrice());
-        response.setVehicleId(vehicle.getId());
-        response.setBrand(vehicle.getBrand());
-        response.setModel(vehicle.getModel());
-        response.setYear(vehicle.getYear());
-        response.setColor(vehicle.getColor());
-        response.setFuelType(vehicle.getFuelType().name());
-        response.setTransmission(vehicle.getTransmission().name());
-        response.setImageUrl(vehicle.getImageUrl());
+    if (!item.getUserId().equals(userId)) {
+        throw new RuntimeException("No puedes eliminar un producto que no es tuyo");
+    }
 
-        return response;
-    }).collect(Collectors.toList());
+    if (item.getOrderId() != null) {
+        throw new RuntimeException("No puedes eliminar un producto que ya fue comprado");
+    }
+
+    orderItemRepository.delete(item);
 }
 }
