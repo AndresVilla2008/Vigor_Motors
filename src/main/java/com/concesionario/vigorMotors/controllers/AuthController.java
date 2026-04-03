@@ -1,10 +1,15 @@
 package com.concesionario.vigorMotors.controllers;
 
 import com.concesionario.vigorMotors.service.TokenBlacklistService;
+
+
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import com.concesionario.vigorMotors.dto.*;
+
 import com.concesionario.vigorMotors.service.AuthService;
+
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
+
     private final TokenBlacklistService tokenBlacklistService;
     private final AuthService authService;
 
