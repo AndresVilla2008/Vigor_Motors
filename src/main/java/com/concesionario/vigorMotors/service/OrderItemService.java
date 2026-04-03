@@ -20,9 +20,12 @@ public class OrderItemService {
     
     private final OrderItemRepository orderItemRepository;
     private final VehicleRepository vehicleRepository;
+    private final JwtService jwtService;
 
-    public List<OrderItem> saveItems(OrderItemsRequestDTO requestDTO) {
+    public List<OrderItem> saveItems(OrderItemsRequestDTO requestDTO, String token) {
         List<OrderItem> items = new ArrayList<>();
+
+        Long userId = jwtService.extractUserId(token);
 
         for (Long vehicleId : requestDTO.getVehicleIds()) {
             Vehicle vehicle = vehicleRepository.findById(vehicleId).orElseThrow(() -> new RuntimeException("Vehiculo no encontrado: "+ vehicleId));
@@ -31,6 +34,7 @@ public class OrderItemService {
             item.setVehicle(vehicleId);
             item.setQuantity(requestDTO.getVehicleIds().size());
             item.setPrice(vehicle.getPrice());
+            item.setUserId(userId);
             
             if (item.getQuantity() > 1) {
                 item.setPrice(vehicle.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())));
