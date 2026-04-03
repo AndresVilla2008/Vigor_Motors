@@ -11,6 +11,8 @@ import com.concesionario.vigorMotors.entity.Vehicle.FuelType;
 @Repository
 public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
+    int countByBrandIgnoreCaseAndModelIgnoreCase(String brand, String model);
+
     List<Vehicle> findByBrandIgnoreCase(String brand);
 
     List<Vehicle> findByFuelType(FuelType fuelType);
