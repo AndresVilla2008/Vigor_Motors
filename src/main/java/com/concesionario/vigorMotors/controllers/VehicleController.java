@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.concesionario.vigorMotors.dto.MessageResponseDTO;
 import com.concesionario.vigorMotors.dto.RegisterVehicleRequestDTO;
 import com.concesionario.vigorMotors.dto.RegisterVehicleResponseDTO;
-import com.concesionario.vigorMotors.dto.VehicleClientDTO;
+import com.concesionario.vigorMotors.dto.VehicleClientResponseDTO;
 import com.concesionario.vigorMotors.entity.Vehicle;
 import com.concesionario.vigorMotors.service.VehicleService;
 
@@ -56,7 +56,7 @@ public class VehicleController {
                 return ResponseEntity.ok(vehicles);
             }
 
-            List<VehicleClientDTO> result = vehicles.stream()
+            List<VehicleClientResponseDTO> result = vehicles.stream()
                     .map(vehicleService::mapToClientDTO)
                     .toList();
             return ResponseEntity.ok(result);
@@ -70,7 +70,7 @@ public class VehicleController {
     public ResponseEntity<?> findById(@PathVariable Long id, HttpServletRequest request) {
         try {
             Vehicle vehicle = vehicleService.findById(id);
-            
+
             if (isAdmin(request)) {
                 return ResponseEntity.ok(vehicle);
             }
