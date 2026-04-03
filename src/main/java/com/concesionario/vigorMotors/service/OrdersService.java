@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.concesionario.vigorMotors.entity.OrderItem;
 import com.concesionario.vigorMotors.entity.Orders;
-import com.concesionario.vigorMotors.enums.OrderStatus;
+import com.concesionario.vigorMotors.entity.Orders.OrderStatus;
 import com.concesionario.vigorMotors.repository.OrderItemRepository;
 import com.concesionario.vigorMotors.repository.OrdersRepository;
 
