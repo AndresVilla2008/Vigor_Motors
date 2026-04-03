@@ -21,7 +21,7 @@ public class OrderItem {
     private Long id;
 
     @Column(name = "order_id")
-    private Long order_id;
+    private Long orderId;
 
     @Column(name = "vehicle_id")
     private Long vehicle;
@@ -31,4 +31,7 @@ public class OrderItem {
 
     @Column(name = "price_at_purchase")
     private BigDecimal price;
+
+    @Column(name = "user_id")
+    private Long userId;
 }
