@@ -3,8 +3,6 @@ package com.concesionario.vigorMotors.entity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import com.concesionario.vigorMotors.enums.OrderStatus;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -37,4 +35,9 @@ public class Orders {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    public enum OrderStatus {
+        COMPLETED, CANCELLED
+    }
 }
+

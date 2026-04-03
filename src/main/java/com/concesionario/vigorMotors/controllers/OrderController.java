@@ -4,6 +4,7 @@ package com.concesionario.vigorMotors.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -91,6 +92,34 @@ public class OrderController {
 
         ordersService.purchase(token);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body("Se ha realizado la compra exitosamente");
+    }
+
+    @GetMapping("/viewSelectedProducts")
+    public ResponseEntity<?> getSelectedProducts(HttpServletRequest httpRequest) {
+
+        String authHeader = httpRequest.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            MessageResponseDTO error = new MessageResponseDTO();
+            error.setMessage("Token no proporcionado");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        }
+
+        String token = authHeader.substring(7);
+
+        if (tokenBlacklistService.isBlacklisted(token)) {
+            MessageResponseDTO error = new MessageResponseDTO();
+            error.setMessage("Sesión cerrada, inicie sesión nuevamente");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+        }
+
+        String role = jwtService.extractRole(token);
+        if (!role.equals("CLIENT")) {
+            MessageResponseDTO error = new MessageResponseDTO();
+            error.setMessage("No tienes permisos para realizar esta acción");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+        }
+
+        return ResponseEntity.ok(orderItemService.getSelectedItems(token));
     }
 
 }
