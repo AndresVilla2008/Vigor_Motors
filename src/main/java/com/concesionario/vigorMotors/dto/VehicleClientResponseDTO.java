@@ -1,12 +1,16 @@
 package com.concesionario.vigorMotors.dto;
+
 import java.math.BigDecimal;
+
 import com.concesionario.vigorMotors.entity.Vehicle.FuelType;
 import com.concesionario.vigorMotors.entity.Vehicle.Transmission;
+
 import lombok.Data;
 
 @Data
-public class VehicleClientDTO {
+public class VehicleClientResponseDTO {
 
+    private Long id;
     private String brand;
     private String model;
     private Integer year;

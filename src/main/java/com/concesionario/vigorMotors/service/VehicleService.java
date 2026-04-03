@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.concesionario.vigorMotors.dto.RegisterVehicleRequestDTO;
 import com.concesionario.vigorMotors.dto.RegisterVehicleResponseDTO;
-import com.concesionario.vigorMotors.dto.VehicleClientDTO;
+import com.concesionario.vigorMotors.dto.VehicleClientResponseDTO;
 import com.concesionario.vigorMotors.entity.Vehicle;
 import com.concesionario.vigorMotors.repository.VehicleRepository;
 
@@ -80,8 +80,8 @@ public class VehicleService {
         vehicleRepository.saveAll(restantes);
     }
 
-    public VehicleClientDTO mapToClientDTO(Vehicle v) {
-        VehicleClientDTO dto = new VehicleClientDTO();
+    public VehicleClientResponseDTO mapToClientDTO(Vehicle v) {
+        VehicleClientResponseDTO dto = new VehicleClientResponseDTO();
         dto.setBrand(v.getBrand());
         dto.setModel(v.getModel());
         dto.setYear(v.getYear());
