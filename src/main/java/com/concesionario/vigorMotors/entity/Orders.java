@@ -1,40 +1,43 @@
 package com.concesionario.vigorMotors.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
-import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-@Entity
+@Entity 
 @Data
-@Table(name = "users")
-public class Users {
+@Table(name = "orders")
+public class Orders {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
-    private String username;
+    @Column(name = "user_id")
+    private Long userId;
 
-    @Column(name = "email")
-    private String email;
+    @Column(name = "total")
+    private BigDecimal totalPrice;
 
-    @Column(name = "password")
-    private String password;
-
-    @Column(name = "role")
-    private String role;
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
 
     @Column(name = "created_at")
-    @CreationTimestamp
     private LocalDateTime createdAt;
+
+    public enum OrderStatus {
+        COMPLETED, CANCELLED
+    }
 }
 
