@@ -17,7 +17,6 @@ export class VehiclesComponent implements OnInit {
   error = '';
   success = '';
 
-  // Modal agregar/editar
   showModal = false;
   editingId: number | null = null;
   form: RegisterVehicleRequest = this.emptyForm();
@@ -59,14 +58,12 @@ export class VehiclesComponent implements OnInit {
     });
   }
 
-  // ADMIN - abrir modal para crear
   openCreate(): void {
     this.editingId = null;
     this.form = this.emptyForm();
     this.showModal = true;
   }
 
-  // ADMIN - abrir modal para editar
   openEdit(vehicle: Vehicle): void {
     this.editingId = vehicle.id;
     this.form = {
@@ -88,7 +85,6 @@ export class VehiclesComponent implements OnInit {
     this.showModal = false;
   }
 
-  // ADMIN - guardar (crear o editar)
   save(): void {
     if (this.editingId) {
       this.vehicleService.update(this.editingId, this.form).subscribe({
@@ -111,7 +107,6 @@ export class VehiclesComponent implements OnInit {
     }
   }
 
-  // ADMIN - eliminar
   delete(id: number): void {
     if (!confirm('¿Estás seguro de eliminar este vehículo?')) return;
     this.vehicleService.delete(id).subscribe({
@@ -123,7 +118,6 @@ export class VehiclesComponent implements OnInit {
     });
   }
 
-  // CLIENT - agregar al carrito
   toggleCart(id: number): void {
     const index = this.cartIds.indexOf(id);
     if (index === -1) {
@@ -137,7 +131,6 @@ export class VehiclesComponent implements OnInit {
     return this.cartIds.includes(id);
   }
 
-  // CLIENT - ir al carrito
   goToCart(): void {
   if (this.cartIds.length === 0) {
     this.error = 'No has seleccionado ningún vehículo';

@@ -1,6 +1,5 @@
 <div class="page">
 
-  <!-- NAVBAR -->
   <nav class="navbar">
     <h1 class="logo">Vigor<span>Motors</span></h1>
     <div class="nav-actions">
@@ -15,14 +14,11 @@
     </div>
   </nav>
 
-  <!-- MENSAJES -->
   <div class="alert success" *ngIf="success">{{ success }}</div>
   <div class="alert error" *ngIf="error">{{ error }}</div>
 
-  <!-- LOADING -->
   <div class="loading" *ngIf="loading">Cargando vehículos...</div>
 
-  <!-- GRID DE VEHÍCULOS -->
   <div class="grid" *ngIf="!loading">
     <div class="card" *ngFor="let v of vehicles">
       <img [src]="v.imageUrl || 'assets/no-image.png'" [alt]="v.brand + ' ' + v.model" />
@@ -33,13 +29,11 @@
         <p class="price">${{ v.price | number }}</p>
         <p class="stock" [class.low]="v.stock <= 2">Stock: {{ v.stock }}</p>
 
-        <!-- Botones ADMIN -->
         <div class="actions" *ngIf="isAdmin">
           <button class="btn-edit" (click)="openEdit(v)">Editar</button>
           <button class="btn-delete" (click)="delete(v.id)">Eliminar</button>
         </div>
 
-        <!-- Botón CLIENT -->
         <div class="actions" *ngIf="!isAdmin">
           <button
             [class.btn-primary]="!isInCart(v.id)"
@@ -53,7 +47,6 @@
     </div>
   </div>
 
-  <!-- MODAL CREAR/EDITAR -->
   <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
     <div class="modal" (click)="$event.stopPropagation()">
       <h2>{{ editingId ? 'Editar vehículo' : 'Agregar vehículo' }}</h2>

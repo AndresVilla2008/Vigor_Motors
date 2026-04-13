@@ -1,1 +1,25 @@
-<p>history works!</p>
+<div class="page">
+  <nav class="navbar">
+    <h1 class="logo">Vigor<span>Motors</span></h1>
+    <button class="btn-outline" (click)="goBack()">← Volver al catálogo</button>
+  </nav>
+
+  <div class="content">
+    <h2>Mis compras</h2>
+
+    <div class="alert error" *ngIf="error">{{ error }}</div>
+    <div class="loading" *ngIf="loading">Cargando...</div>
+    <div class="empty" *ngIf="!loading && history.length === 0">No tienes compras realizadas</div>
+
+    <div class="item" *ngFor="let h of history">
+      <img [src]="h.imageUrl || 'assets/no-image.png'" [alt]="h.brand" />
+      <div class="item-info">
+        <h3>{{ h.brand }} {{ h.model }}</h3>
+        <p>{{ h.year }} · {{ h.color }} · {{ h.fuelType }}</p>
+        <p>Cantidad: {{ h.quantity }}</p>
+        <p class="price">${{ h.price | number }}</p>
+      </div>
+      <span class="status" [class.completed]="h.status === 'COMPLETED'">{{ h.status }}</span>
+    </div>
+  </div>
+</div>

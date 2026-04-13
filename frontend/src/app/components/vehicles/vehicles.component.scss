@@ -82,7 +82,6 @@
   gap: 0.5rem;
 }
 
-// Botones
 button {
   cursor: pointer;
   border: none;
@@ -141,7 +140,6 @@ button {
   &:hover { background-color: #005a25; }
 }
 
-// Modal
 .modal-overlay {
   position: fixed;
   inset: 0;
