@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-VigorMotorsApplication<vigorMotors>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.concesionario.vigorMotors.VigorMotorsApplication",
+            "projectName": "vigorMotors",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
