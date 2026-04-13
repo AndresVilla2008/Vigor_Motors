@@ -1,0 +1,37 @@
+<div class="page">
+  <nav class="navbar">
+    <h1 class="logo">Vigor<span>Motors</span></h1>
+    <button class="btn-outline" (click)="goBack()">← Volver al catálogo</button>
+  </nav>
+
+  <div class="content">
+    <h2>Mi carrito</h2>
+
+    <div class="alert success" *ngIf="success">{{ success }}</div>
+    <div class="alert error" *ngIf="error">{{ error }}</div>
+    <div class="loading" *ngIf="loading">Cargando...</div>
+
+    <div class="empty" *ngIf="!loading && items.length === 0">
+      No tienes vehículos en el carrito
+    </div>
+
+    <div class="items" *ngIf="!loading && items.length > 0">
+      <div class="item" *ngFor="let item of items">
+        <img [src]="item.imageUrl || 'assets/no-image.png'" [alt]="item.brand" />
+        <div class="item-info">
+          <h3>{{ item.brand }} {{ item.model }}</h3>
+          <p>{{ item.year }} · {{ item.color }} · {{ item.fuelType }}</p>
+          <p class="price">${{ item.price | number }}</p>
+        </div>
+        <button class="btn-delete" (click)="deleteItem(item.itemId)">Eliminar</button>
+      </div>
+
+      <div class="summary">
+        <span>Total:</span>
+        <span class="total">${{ total | number }}</span>
+      </div>
+
+      <button class="btn-purchase" (click)="purchase()">Confirmar compra</button>
+    </div>
+  </div>
+</div>

@@ -63,4 +63,6 @@ CREATE TABLE `order_items` (
   CONSTRAINT `chk_quantity` CHECK (`quantity` > 0)
 );
 
+ALTER TABLE order_items MODIFY order_id BIGINT NULL;
+
 SHOW TABLES;

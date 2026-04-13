@@ -35,14 +35,15 @@ public class OrderItemService {
         Long userId = jwtService.extractUserId(token);
 
         for (Long vehicleId : requestDTO.getVehicleIds()) {
-            Vehicle vehicle = vehicleRepository.findById(vehicleId).orElseThrow(() -> new RuntimeException("Vehiculo no encontrado: "+ vehicleId));
+            Vehicle vehicle = vehicleRepository.findById(vehicleId)
+                    .orElseThrow(() -> new RuntimeException("Vehiculo no encontrado: " + vehicleId));
 
             OrderItem item = new OrderItem();
             item.setVehicle(vehicleId);
             item.setQuantity(requestDTO.getVehicleIds().size());
             item.setPrice(vehicle.getPrice());
             item.setUserId(userId);
-            
+
             if (item.getQuantity() > 1) {
                 item.setPrice(vehicle.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())));
             }
@@ -63,7 +64,8 @@ public class OrderItemService {
         }
 
         return items.stream().map(item -> {
-            Vehicle vehicle = vehicleRepository.findById(item.getVehicle()).orElseThrow(() -> new RuntimeException("Vehículo no encontrado: " + item.getVehicle()));
+            Vehicle vehicle = vehicleRepository.findById(item.getVehicle())
+                    .orElseThrow(() -> new RuntimeException("Vehículo no encontrado: " + item.getVehicle()));
 
             SelectedItemResponseDTO response = new SelectedItemResponseDTO();
             response.setItemId(item.getId());
@@ -74,8 +76,8 @@ public class OrderItemService {
             response.setModel(vehicle.getModel());
             response.setYear(vehicle.getYear());
             response.setColor(vehicle.getColor());
-            response.setFuelType(vehicle.getFuelType().name());
-            response.setTransmission(vehicle.getTransmission().name());
+            response.setFuelType(vehicle.getFuelType() != null ? vehicle.getFuelType().name() : "N/A");
+            response.setTransmission(vehicle.getTransmission() != null ? vehicle.getTransmission().name() : "N/A");
             response.setImageUrl(vehicle.getImageUrl());
 
             return response;
@@ -83,7 +85,8 @@ public class OrderItemService {
     }
 
     public void deleteItem(Long itemId, Long userId) {
-        OrderItem item = orderItemRepository.findById(itemId).orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+        OrderItem item = orderItemRepository.findById(itemId)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
         if (!item.getUserId().equals(userId)) {
             throw new RuntimeException("No puedes eliminar un producto que no es tuyo");
@@ -105,24 +108,26 @@ public class OrderItemService {
         }
 
         return items.stream().map(item -> {
-            Vehicle vehicle = vehicleRepository.findById(item.getVehicle()).orElseThrow(() -> new RuntimeException("Vehículo no encontrado: " + item.getVehicle()));
+            Vehicle vehicle = vehicleRepository.findById(item.getVehicle())
+                    .orElseThrow(() -> new RuntimeException("Vehículo no encontrado: " + item.getVehicle()));
 
-            Orders order = ordersRepository.findById(item.getOrderId()).orElseThrow(() -> new RuntimeException("Orden no encontrada"));
+            Orders order = ordersRepository.findById(item.getOrderId())
+                    .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
 
             PurchaseHistoryResponseDTO response = new PurchaseHistoryResponseDTO();
-                response.setTotalPrice(order.getTotalPrice());
-                response.setStatus(order.getStatus().name());
-                response.setBrand(vehicle.getBrand());
-                response.setModel(vehicle.getModel());
-                response.setYear(vehicle.getYear());
-                response.setColor(vehicle.getColor());
-                response.setFuelType(vehicle.getFuelType().name());
-                response.setTransmission(vehicle.getTransmission().name());
-                response.setImageUrl(vehicle.getImageUrl());
-                response.setQuantity(item.getQuantity());
-                response.setPrice(item.getPrice());
+            response.setTotalPrice(order.getTotalPrice());
+            response.setStatus(order.getStatus().name());
+            response.setBrand(vehicle.getBrand());
+            response.setModel(vehicle.getModel());
+            response.setYear(vehicle.getYear());
+            response.setColor(vehicle.getColor());
+            response.setFuelType(vehicle.getFuelType() != null ? vehicle.getFuelType().name() : "N/A");
+            response.setTransmission(vehicle.getTransmission() != null ? vehicle.getTransmission().name() : "N/A");
+            response.setImageUrl(vehicle.getImageUrl());
+            response.setQuantity(item.getQuantity());
+            response.setPrice(item.getPrice());
 
-                return response;
+            return response;
         }).collect(Collectors.toList());
     }
 
@@ -134,9 +139,11 @@ public class OrderItemService {
         }
 
         return items.stream().map(item -> {
-            Vehicle vehicle = vehicleRepository.findById(item.getVehicle()).orElseThrow(() -> new RuntimeException("Vehículo no encontrado: " + item.getVehicle()));
+            Vehicle vehicle = vehicleRepository.findById(item.getVehicle())
+                    .orElseThrow(() -> new RuntimeException("Vehículo no encontrado: " + item.getVehicle()));
 
-            Orders order = ordersRepository.findById(item.getOrderId()).orElseThrow(() -> new RuntimeException("Orden no encontrada"));
+            Orders order = ordersRepository.findById(item.getOrderId())
+                    .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
 
             PurchaseHistoryAdminResponseDTO response = new PurchaseHistoryAdminResponseDTO();
             response.setUserId(item.getUserId());
@@ -146,8 +153,8 @@ public class OrderItemService {
             response.setModel(vehicle.getModel());
             response.setYear(vehicle.getYear());
             response.setColor(vehicle.getColor());
-            response.setFuelType(vehicle.getFuelType().name());
-            response.setTransmission(vehicle.getTransmission().name());
+            response.setFuelType(vehicle.getFuelType() != null ? vehicle.getFuelType().name() : "N/A");
+            response.setTransmission(vehicle.getTransmission() != null ? vehicle.getTransmission().name() : "N/A");
             response.setImageUrl(vehicle.getImageUrl());
             response.setQuantity(item.getQuantity());
             response.setPrice(item.getPrice());
@@ -155,7 +162,4 @@ public class OrderItemService {
             return response;
         }).collect(Collectors.toList());
     }
-
 }
-
-

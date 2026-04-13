@@ -1,0 +1,38 @@
+<div class="page">
+  <nav class="navbar">
+    <h1 class="logo">Vigor<span>Motors</span></h1>
+    <button class="btn-outline" (click)="goBack()">← Volver al catálogo</button>
+  </nav>
+
+  <div class="content">
+    <div class="card">
+      <h2>Cambiar rol de usuario</h2>
+      <p class="subtitle">Ingresa el correo del usuario y selecciona el nuevo rol</p>
+
+      <div class="alert success" *ngIf="success">{{ success }}</div>
+      <div class="alert error" *ngIf="error">{{ error }}</div>
+
+      <div class="form-group">
+        <label>Correo electrónico</label>
+        <input
+          type="email"
+          [(ngModel)]="email"
+          placeholder="usuario@ejemplo.com"
+          [disabled]="loading"
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Nuevo rol</label>
+        <select [(ngModel)]="role" [disabled]="loading">
+          <option value="CLIENT">CLIENT</option>
+          <option value="ADMIN">ADMIN</option>
+        </select>
+      </div>
+
+      <button class="btn-primary" (click)="changeRole()" [disabled]="loading || !email">
+        {{ loading ? 'Cambiando...' : 'Cambiar rol' }}
+      </button>
+    </div>
+  </div>
+</div>

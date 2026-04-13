@@ -1,0 +1,119 @@
+<div class="page">
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <h1 class="logo">Vigor<span>Motors</span></h1>
+    <div class="nav-actions">
+      <button *ngIf="isAdmin" class="btn-primary" (click)="openCreate()">+ Agregar vehículo</button>
+      <button *ngIf="!isAdmin && cartIds.length > 0" class="btn-cart" (click)="goToCart()">
+        🛒 Carrito ({{ cartIds.length }})
+      </button>
+      <button *ngIf="!isAdmin" class="btn-outline" routerLink="/history">Mis compras</button>
+      <button *ngIf="isAdmin" class="btn-outline" routerLink="/admin/history">Historial</button>
+      <button *ngIf="isAdmin" class="btn-outline" routerLink="/admin/change-role">Gestionar roles</button>
+      <button class="btn-logout" (click)="logout()">Cerrar sesión</button>
+    </div>
+  </nav>
+
+  <!-- MENSAJES -->
+  <div class="alert success" *ngIf="success">{{ success }}</div>
+  <div class="alert error" *ngIf="error">{{ error }}</div>
+
+  <!-- LOADING -->
+  <div class="loading" *ngIf="loading">Cargando vehículos...</div>
+
+  <!-- GRID DE VEHÍCULOS -->
+  <div class="grid" *ngIf="!loading">
+    <div class="card" *ngFor="let v of vehicles">
+      <img [src]="v.imageUrl || 'assets/no-image.png'" [alt]="v.brand + ' ' + v.model" />
+      <div class="card-body">
+        <h3>{{ v.brand }} {{ v.model }}</h3>
+        <p class="year">{{ v.year }} · {{ v.color }}</p>
+        <p class="specs">{{ v.fuelType }} · {{ v.transmission }}</p>
+        <p class="price">${{ v.price | number }}</p>
+        <p class="stock" [class.low]="v.stock <= 2">Stock: {{ v.stock }}</p>
+
+        <!-- Botones ADMIN -->
+        <div class="actions" *ngIf="isAdmin">
+          <button class="btn-edit" (click)="openEdit(v)">Editar</button>
+          <button class="btn-delete" (click)="delete(v.id)">Eliminar</button>
+        </div>
+
+        <!-- Botón CLIENT -->
+        <div class="actions" *ngIf="!isAdmin">
+          <button
+            [class.btn-primary]="!isInCart(v.id)"
+            [class.btn-remove]="isInCart(v.id)"
+            (click)="toggleCart(v.id)"
+          >
+            {{ isInCart(v.id) ? '✓ En carrito' : 'Agregar al carrito' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CREAR/EDITAR -->
+  <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h2>{{ editingId ? 'Editar vehículo' : 'Agregar vehículo' }}</h2>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Marca</label>
+          <input type="text" [(ngModel)]="form.brand" placeholder="BMW" />
+        </div>
+        <div class="form-group">
+          <label>Modelo</label>
+          <input type="text" [(ngModel)]="form.model" placeholder="M4 Competition" />
+        </div>
+        <div class="form-group">
+          <label>Año</label>
+          <input type="number" [(ngModel)]="form.year" />
+        </div>
+        <div class="form-group">
+          <label>Precio</label>
+          <input type="number" [(ngModel)]="form.price" />
+        </div>
+        <div class="form-group">
+          <label>Color</label>
+          <input type="text" [(ngModel)]="form.color" />
+        </div>
+        <div class="form-group">
+          <label>Combustible</label>
+          <select [(ngModel)]="form.fuelType">
+            <option>Gasolina</option>
+            <option>Diesel</option>
+            <option>Híbrido</option>
+            <option>Eléctrico</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Transmisión</label>
+          <select [(ngModel)]="form.transmission">
+            <option>Manual</option>
+            <option>Automática</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Kilometraje</label>
+          <input type="number" [(ngModel)]="form.mileage"/>
+        </div>
+        <div class="form-group full">
+          <label>Descripción</label>
+          <textarea [(ngModel)]="form.description" rows="3"></textarea>
+        </div>
+        <div class="form-group full">
+          <label>URL de imagen</label>
+          <input type="text" [(ngModel)]="form.imageUrl"/>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-outline" (click)="closeModal()">Cancelar</button>
+        <button class="btn-primary" (click)="save()">{{ editingId ? 'Actualizar' : 'Guardar' }}</button>
+      </div>
+    </div>
+  </div>
+
+</div>

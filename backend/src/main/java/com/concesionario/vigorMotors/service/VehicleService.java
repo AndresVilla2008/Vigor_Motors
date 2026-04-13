@@ -82,6 +82,7 @@ public class VehicleService {
 
     public VehicleClientResponseDTO mapToClientDTO(Vehicle v) {
         VehicleClientResponseDTO dto = new VehicleClientResponseDTO();
+        dto.setId(v.getId());
         dto.setBrand(v.getBrand());
         dto.setModel(v.getModel());
         dto.setYear(v.getYear());

@@ -1,7 +1,5 @@
 package com.concesionario.vigorMotors.controllers;
 
-
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -64,7 +62,9 @@ public class OrderController {
         }
 
         orderItemService.saveItems(request, token);
-        return ResponseEntity.status(HttpStatus.OK).body("Producto(s) seleccionado(s)");
+        MessageResponseDTO response = new MessageResponseDTO();
+        response.setMessage("Producto(s) seleccionado(s) correctamente");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping("/purchase")
@@ -93,7 +93,9 @@ public class OrderController {
         }
 
         ordersService.purchase(token);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Se ha realizado la compra exitosamente");
+        MessageResponseDTO response = new MessageResponseDTO();
+        response.setMessage("Se ha realizado la compra exitosamente");
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
     }
 
     @GetMapping("/viewSelectedProducts")
@@ -151,7 +153,7 @@ public class OrderController {
 
         Long userId = jwtService.extractUserId(token);
         orderItemService.deleteItem(itemId, userId);
-    
+
         MessageResponseDTO response = new MessageResponseDTO();
         response.setMessage("Producto eliminado correctamente");
         return ResponseEntity.ok(response);
@@ -176,7 +178,7 @@ public class OrderController {
         }
 
         String role = jwtService.extractRole(token);
-            if (!role.equals("CLIENT")) {
+        if (!role.equals("CLIENT")) {
             MessageResponseDTO error = new MessageResponseDTO();
             error.setMessage("No tienes permisos para realizar esta acción");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
